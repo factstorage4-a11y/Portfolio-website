@@ -1,12 +1,11 @@
 import { motion } from 'framer-motion';
-import { Code2, Heart, ArrowUp } from 'lucide-react';
+import { Github, Linkedin, Twitter, Instagram } from 'lucide-react';
 
-const navLinks = [
-  { name: 'Home', href: '#home' },
-  { name: 'About', href: '#about' },
-  { name: 'Projects', href: '#projects' },
-  { name: 'Skills', href: '#skills' },
-  { name: 'Contact', href: '#contact' },
+const socialLinks = [
+  { icon: Github, href: 'https://github.com/vedprakasharya', label: 'GitHub' },
+  { icon: Linkedin, href: 'https://linkedin.com/in/vedpra260', label: 'LinkedIn' },
+  { icon: Twitter, href: '#', label: 'Twitter' },
+  { icon: Instagram, href: '#', label: 'Instagram' },
 ];
 
 export default function Footer() {
@@ -14,88 +13,126 @@ export default function Footer() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const scrollToSection = (href: string) => {
-    const element = document.querySelector(href);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
-
   return (
-    <footer className="relative py-12 overflow-hidden">
-      <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-border to-transparent" />
-      
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-8">
-          {/* Logo and copyright */}
-          <div className="flex flex-col items-center md:items-start gap-4">
-            <motion.a
-              href="#home"
-              onClick={(e) => {
-                e.preventDefault();
-                scrollToSection('#home');
-              }}
-              className="flex items-center gap-2"
-              whileHover={{ scale: 1.05 }}
+    <footer className="relative bg-[#0d0d0d] border-t border-white/10">
+      <div className="w-full px-6 lg:px-12 py-16">
+        <div className="grid lg:grid-cols-3 gap-12 lg:gap-24">
+          {/* Left - Brand */}
+          <div>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
             >
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 flex items-center justify-center">
-                <Code2 className="w-5 h-5 text-white" />
-              </div>
-              <span className="text-xl font-bold">
-                <span className="text-gradient">Ved</span>
-                <span className="text-foreground">.dev</span>
-              </span>
-            </motion.a>
-            <p className="text-sm text-muted-foreground text-center md:text-left">
-              © {new Date().getFullYear()} Ved Prakash Arya. All rights reserved.
-            </p>
+              <h3 className="text-2xl font-light mb-4">Ved Prakash Arya</h3>
+              <p className="text-white/50 text-sm leading-relaxed max-w-sm">
+                Computer Science student at Bihar Engineering University, Patna. 
+                Passionate about building innovative solutions and creating 
+                impactful digital experiences.
+              </p>
+            </motion.div>
           </div>
 
-          {/* Quick links */}
-          <nav className="flex flex-wrap justify-center gap-6">
-            {navLinks.map((link) => (
-              <motion.a
-                key={link.name}
-                href={link.href}
+          {/* Center - Links */}
+          <div className="flex flex-col items-start lg:items-center">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              className="space-y-4"
+            >
+              <a 
+                href="#about" 
                 onClick={(e) => {
                   e.preventDefault();
-                  scrollToSection(link.href);
+                  document.querySelector('#about')?.scrollIntoView({ behavior: 'smooth' });
                 }}
-                className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-                whileHover={{ y: -2 }}
+                className="block text-white/50 hover:text-white transition-colors text-sm"
               >
-                {link.name}
-              </motion.a>
-            ))}
-          </nav>
-
-          {/* Back to top */}
-          <motion.button
-            onClick={scrollToTop}
-            className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
-            whileHover={{ y: -2 }}
-          >
-            Back to top
-            <motion.div
-              animate={{ y: [0, -4, 0] }}
-              transition={{ duration: 1.5, repeat: Infinity }}
-            >
-              <ArrowUp className="w-4 h-4" />
+                About
+              </a>
+              <a 
+                href="#projects" 
+                onClick={(e) => {
+                  e.preventDefault();
+                  document.querySelector('#projects')?.scrollIntoView({ behavior: 'smooth' });
+                }}
+                className="block text-white/50 hover:text-white transition-colors text-sm"
+              >
+                Projects
+              </a>
+              <a 
+                href="#skills" 
+                onClick={(e) => {
+                  e.preventDefault();
+                  document.querySelector('#skills')?.scrollIntoView({ behavior: 'smooth' });
+                }}
+                className="block text-white/50 hover:text-white transition-colors text-sm"
+              >
+                Skills
+              </a>
+              <a 
+                href="#contact" 
+                onClick={(e) => {
+                  e.preventDefault();
+                  document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' });
+                }}
+                className="block text-white/50 hover:text-white transition-colors text-sm"
+              >
+                Contact
+              </a>
             </motion.div>
-          </motion.button>
+          </div>
+
+          {/* Right - Social */}
+          <div className="flex flex-col items-start lg:items-end">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+            >
+              <p className="text-xs uppercase tracking-[0.2em] text-white/40 mb-4">
+                Connect With Me
+              </p>
+              <div className="flex gap-3">
+                {socialLinks.map((social) => (
+                  <a
+                    key={social.label}
+                    href={social.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-10 h-10 border border-white/10 flex items-center justify-center text-white/50 hover:text-white hover:border-white/30 transition-all"
+                    aria-label={social.label}
+                  >
+                    <social.icon className="w-4 h-4" />
+                  </a>
+                ))}
+              </div>
+            </motion.div>
+          </div>
         </div>
 
-        {/* Made with love */}
+        {/* Bottom Bar */}
         <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
-          transition={{ delay: 0.5 }}
-          className="mt-8 pt-8 border-t border-border text-center"
+          transition={{ duration: 0.6, delay: 0.3 }}
+          className="mt-16 pt-8 border-t border-white/10 flex flex-col sm:flex-row justify-between items-center gap-4"
         >
-          <p className="text-sm text-muted-foreground flex items-center justify-center gap-1">
-            Made with <Heart className="w-4 h-4 text-red-500 fill-red-500" /> by Ved Prakash Arya
+          <p className="text-white/40 text-sm">
+            © {new Date().getFullYear()} Ved Prakash Arya. All rights reserved.
           </p>
+          
+          <button
+            onClick={scrollToTop}
+            className="text-white/40 hover:text-white text-sm transition-colors"
+          >
+            Back to Top ↑
+          </button>
         </motion.div>
       </div>
     </footer>
