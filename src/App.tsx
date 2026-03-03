@@ -18,56 +18,67 @@ function App() {
   const mainRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Global snap for pinned sections
-    const setupGlobalSnap = () => {
-      const pinned = ScrollTrigger.getAll()
-        .filter(st => st.vars.pin)
-        .sort((a, b) => a.start - b.start);
-      
-      const maxScroll = ScrollTrigger.maxScroll(window);
-      if (!maxScroll || pinned.length === 0) return;
+    // Only enable snap on desktop (lg breakpoint and above)
+    const isDesktop = window.innerWidth >= 1024;
+    
+    if (isDesktop) {
+      // Global snap for pinned sections
+      const setupGlobalSnap = () => {
+        const pinned = ScrollTrigger.getAll()
+          .filter(st => st.vars.pin)
+          .sort((a, b) => a.start - b.start);
+        
+        const maxScroll = ScrollTrigger.maxScroll(window);
+        if (!maxScroll || pinned.length === 0) return;
 
-      const pinnedRanges = pinned.map(st => ({
-        start: st.start / maxScroll,
-        end: (st.end ?? st.start) / maxScroll,
-        center: (st.start + ((st.end ?? st.start) - st.start) * 0.5) / maxScroll,
-      }));
+        const pinnedRanges = pinned.map(st => ({
+          start: st.start / maxScroll,
+          end: (st.end ?? st.start) / maxScroll,
+          center: (st.start + ((st.end ?? st.start) - st.start) * 0.5) / maxScroll,
+        }));
 
-      ScrollTrigger.create({
-        snap: {
-          snapTo: (value: number) => {
-            const inPinned = pinnedRanges.some(
-              r => value >= r.start - 0.02 && value <= r.end + 0.02
-            );
-            if (!inPinned) return value;
+        ScrollTrigger.create({
+          snap: {
+            snapTo: (value: number) => {
+              const inPinned = pinnedRanges.some(
+                r => value >= r.start - 0.02 && value <= r.end + 0.02
+              );
+              if (!inPinned) return value;
 
-            const target = pinnedRanges.reduce(
-              (closest, r) =>
-                Math.abs(r.center - value) < Math.abs(closest - value)
-                  ? r.center
-                  : closest,
-              pinnedRanges[0]?.center ?? 0
-            );
-            return target;
+              const target = pinnedRanges.reduce(
+                (closest, r) =>
+                  Math.abs(r.center - value) < Math.abs(closest - value)
+                    ? r.center
+                    : closest,
+                pinnedRanges[0]?.center ?? 0
+              );
+              return target;
+            },
+            duration: { min: 0.15, max: 0.35 },
+            delay: 0,
+            ease: 'power2.out',
           },
-          duration: { min: 0.15, max: 0.35 },
-          delay: 0,
-          ease: 'power2.out',
-        },
-      });
+        });
+      };
+
+      // Delay to allow all ScrollTriggers to initialize
+      const timer = setTimeout(setupGlobalSnap, 500);
+      return () => clearTimeout(timer);
+    }
+  }, []);
+
+  // Handle resize to refresh ScrollTrigger
+  useEffect(() => {
+    const handleResize = () => {
+      ScrollTrigger.refresh();
     };
 
-    // Delay to allow all ScrollTriggers to initialize
-    const timer = setTimeout(setupGlobalSnap, 500);
-
-    return () => {
-      clearTimeout(timer);
-      ScrollTrigger.getAll().forEach(st => st.kill());
-    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   return (
-    <div ref={mainRef} className="relative bg-dark">
+    <div ref={mainRef} className="relative bg-dark min-h-screen">
       {/* Grain overlay */}
       <div className="grain-overlay" />
       
@@ -76,12 +87,12 @@ function App() {
       
       {/* Main content */}
       <main className="relative">
-        <Hero className="z-10" />
-        <About className="z-20" />
-        <Experience className="z-30" />
-        <Skills className="z-40" />
-        <Projects className="z-50" />
-        <Contact className="z-60" />
+        <Hero />
+        <About />
+        <Experience />
+        <Skills />
+        <Projects />
+        <Contact />
       </main>
     </div>
   );

@@ -1,7 +1,7 @@
 import { useRef, useLayoutEffect } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { Briefcase, Network, Brain, CheckCircle2, Calendar, MapPin } from 'lucide-react';
+import { Network, Brain, CheckCircle2, Calendar, MapPin } from 'lucide-react';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -11,7 +11,6 @@ interface ExperienceProps {
 
 const Experience = ({ className = '' }: ExperienceProps) => {
   const sectionRef = useRef<HTMLElement>(null);
-  const watermarkRef = useRef<HTMLDivElement>(null);
   const cardsRef = useRef<HTMLDivElement>(null);
   const statsRef = useRef<HTMLDivElement>(null);
 
@@ -20,39 +19,21 @@ const Experience = ({ className = '' }: ExperienceProps) => {
     if (!section) return;
 
     const ctx = gsap.context(() => {
-      // Watermark animation
-      gsap.fromTo(
-        watermarkRef.current,
-        { x: '-10vw', opacity: 0 },
-        {
-          x: 0,
-          opacity: 0.08,
-          ease: 'power2.out',
-          scrollTrigger: {
-            trigger: section,
-            start: 'top 80%',
-            end: 'top 50%',
-            scrub: 0.3,
-          },
-        }
-      );
-
       // Experience cards animation
       const cards = cardsRef.current?.querySelectorAll('.exp-card');
       if (cards) {
         gsap.fromTo(
           cards,
-          { y: '8vh', opacity: 0, scale: 0.98 },
+          { y: 30, opacity: 0 },
           {
             y: 0,
             opacity: 1,
-            scale: 1,
             stagger: 0.15,
             ease: 'power2.out',
             scrollTrigger: {
               trigger: cardsRef.current,
-              start: 'top 80%',
-              end: 'top 40%',
+              start: 'top 85%',
+              end: 'top 55%',
               scrub: 0.3,
             },
           }
@@ -64,7 +45,7 @@ const Experience = ({ className = '' }: ExperienceProps) => {
       if (stats) {
         gsap.fromTo(
           stats,
-          { y: '4vh', opacity: 0 },
+          { y: 20, opacity: 0 },
           {
             y: 0,
             opacity: 1,
@@ -72,8 +53,8 @@ const Experience = ({ className = '' }: ExperienceProps) => {
             ease: 'power2.out',
             scrollTrigger: {
               trigger: statsRef.current,
-              start: 'top 85%',
-              end: 'top 60%',
+              start: 'top 90%',
+              end: 'top 70%',
               scrub: 0.3,
             },
           }
@@ -121,53 +102,41 @@ const Experience = ({ className = '' }: ExperienceProps) => {
     <section
       ref={sectionRef}
       id="experience"
-      className={`relative min-h-screen bg-dark-secondary py-[12vh] overflow-hidden ${className}`}
+      className={`relative w-full py-16 sm:py-20 lg:py-24 bg-dark-secondary ${className}`}
     >
-      {/* Watermark */}
-      <div
-        ref={watermarkRef}
-        className="absolute left-[4vw] top-[10vh] hidden lg:block"
-      >
-        <div className="vertical-text font-display text-[clamp(60px,8vw,140px)] font-black tracking-[0.15em] text-gold-dim leading-none">
-          EXPERIENCE
-        </div>
-      </div>
-
-      <div className="w-full px-6 lg:px-[8vw]">
+      <div className="w-full px-4 sm:px-6 lg:px-[8vw]">
         {/* Header */}
-        <div className="text-center mb-16">
-          <span className="text-gold text-sm uppercase tracking-[0.3em] mb-4 block">
+        <div className="text-center mb-10 sm:mb-14 lg:mb-16">
+          <span className="text-gold text-xs sm:text-sm uppercase tracking-[0.2em] sm:tracking-[0.3em] mb-3 sm:mb-4 block">
             My Journey
           </span>
-          <h2 className="font-display text-[clamp(28px,3.6vw,56px)] font-bold text-text-primary leading-tight tracking-[-0.02em]">
+          <h2 className="font-display text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold text-text-primary leading-tight tracking-[-0.02em]">
             Work Experience
           </h2>
         </div>
 
         {/* Experience Cards */}
-        <div ref={cardsRef} className="grid lg:grid-cols-2 gap-6 max-w-5xl mx-auto">
+        <div ref={cardsRef} className="grid md:grid-cols-2 gap-4 sm:gap-6 max-w-4xl mx-auto">
           {experiences.map((exp, index) => (
             <div
               key={index}
-              className="exp-card p-8 rounded-[10px] bg-white/5 border border-white/10 hover:border-gold/30 transition-all duration-300 group hover:-translate-y-2"
+              className="exp-card p-5 sm:p-6 lg:p-8 rounded-lg sm:rounded-[10px] bg-white/5 border border-white/10 hover:border-gold/30 transition-all duration-300"
             >
-              <div className="flex items-start justify-between mb-6">
-                <div className="flex items-start gap-4">
-                  <div className="w-14 h-14 rounded-full bg-gold/10 flex items-center justify-center flex-shrink-0 group-hover:bg-gold/20 transition-colors duration-300">
-                    <exp.icon className="w-6 h-6 text-gold" />
-                  </div>
-                  <div>
-                    <h3 className="text-text-primary font-semibold text-lg">
-                      {exp.title}
-                    </h3>
-                    <p className="text-gold text-sm mt-1">
-                      {exp.company}
-                    </p>
-                  </div>
+              <div className="flex items-start gap-3 sm:gap-4 mb-4 sm:mb-5">
+                <div className="w-11 h-11 sm:w-12 sm:h-12 lg:w-14 lg:h-14 rounded-full bg-gold/10 flex items-center justify-center flex-shrink-0">
+                  <exp.icon className="w-5 h-5 sm:w-6 text-gold" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <h3 className="text-text-primary font-semibold text-sm sm:text-base lg:text-lg">
+                    {exp.title}
+                  </h3>
+                  <p className="text-gold text-xs sm:text-sm mt-0.5 sm:mt-1">
+                    {exp.company}
+                  </p>
                 </div>
               </div>
 
-              <div className="flex items-center gap-4 mb-4 text-text-secondary/60 text-xs">
+              <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mb-3 sm:mb-4 text-text-secondary/60 text-[10px] sm:text-xs">
                 <span className="flex items-center gap-1">
                   <MapPin className="w-3 h-3" />
                   {exp.location}
@@ -178,14 +147,14 @@ const Experience = ({ className = '' }: ExperienceProps) => {
                 </span>
               </div>
 
-              <p className="text-text-secondary text-sm mb-4">
+              <p className="text-text-secondary text-xs sm:text-sm mb-3 sm:mb-4">
                 {exp.description}
               </p>
 
-              <ul className="space-y-2">
+              <ul className="space-y-1.5 sm:space-y-2">
                 {exp.achievements.map((achievement, i) => (
-                  <li key={i} className="flex items-start gap-2 text-sm text-text-secondary/80">
-                    <CheckCircle2 className="w-4 h-4 text-gold flex-shrink-0 mt-0.5" />
+                  <li key={i} className="flex items-start gap-2 text-xs sm:text-sm text-text-secondary/80">
+                    <CheckCircle2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gold flex-shrink-0 mt-0.5" />
                     <span>{achievement}</span>
                   </li>
                 ))}
@@ -197,14 +166,14 @@ const Experience = ({ className = '' }: ExperienceProps) => {
         {/* Stats */}
         <div
           ref={statsRef}
-          className="mt-16 flex flex-wrap justify-center gap-8 lg:gap-16"
+          className="mt-10 sm:mt-14 lg:mt-16 flex flex-wrap justify-center gap-6 sm:gap-10 lg:gap-16"
         >
           {stats.map((stat, index) => (
             <div key={index} className="stat-item text-center">
-              <div className="font-display text-[clamp(40px,4vw,64px)] font-bold text-gold">
+              <div className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold text-gold">
                 {stat.value}
               </div>
-              <div className="text-sm text-text-secondary uppercase tracking-wider mt-2">
+              <div className="text-xs sm:text-sm text-text-secondary uppercase tracking-wider mt-1 sm:mt-2">
                 {stat.label}
               </div>
             </div>

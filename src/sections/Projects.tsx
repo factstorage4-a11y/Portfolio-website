@@ -1,7 +1,7 @@
 import { useRef, useLayoutEffect } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { FolderGit2, Server, Network, ExternalLink, Github, Code2, Database, Layers } from 'lucide-react';
+import { Database, Network, Code2, ExternalLink, Github } from 'lucide-react';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -11,7 +11,6 @@ interface ProjectsProps {
 
 const Projects = ({ className = '' }: ProjectsProps) => {
   const sectionRef = useRef<HTMLElement>(null);
-  const watermarkRef = useRef<HTMLDivElement>(null);
   const projectsRef = useRef<HTMLDivElement>(null);
   const githubRef = useRef<HTMLDivElement>(null);
 
@@ -20,35 +19,18 @@ const Projects = ({ className = '' }: ProjectsProps) => {
     if (!section) return;
 
     const ctx = gsap.context(() => {
-      // Watermark animation
-      gsap.fromTo(
-        watermarkRef.current,
-        { x: '-10vw', opacity: 0 },
-        {
-          x: 0,
-          opacity: 0.08,
-          ease: 'power2.out',
-          scrollTrigger: {
-            trigger: section,
-            start: 'top 80%',
-            end: 'top 50%',
-            scrub: 0.3,
-          },
-        }
-      );
-
       // GitHub banner animation
       gsap.fromTo(
         githubRef.current,
-        { y: '4vh', opacity: 0 },
+        { y: 20, opacity: 0 },
         {
           y: 0,
           opacity: 1,
           ease: 'power2.out',
           scrollTrigger: {
             trigger: githubRef.current,
-            start: 'top 85%',
-            end: 'top 60%',
+            start: 'top 90%',
+            end: 'top 70%',
             scrub: 0.3,
           },
         }
@@ -59,17 +41,16 @@ const Projects = ({ className = '' }: ProjectsProps) => {
       if (projectCards) {
         gsap.fromTo(
           projectCards,
-          { y: '8vh', opacity: 0, scale: 0.98 },
+          { y: 25, opacity: 0 },
           {
             y: 0,
             opacity: 1,
-            scale: 1,
-            stagger: 0.15,
+            stagger: 0.1,
             ease: 'power2.out',
             scrollTrigger: {
               trigger: projectsRef.current,
-              start: 'top 80%',
-              end: 'top 40%',
+              start: 'top 85%',
+              end: 'top 55%',
               scrub: 0.3,
             },
           }
@@ -132,25 +113,15 @@ const Projects = ({ className = '' }: ProjectsProps) => {
     <section
       ref={sectionRef}
       id="projects"
-      className={`relative min-h-screen bg-dark-secondary py-[12vh] overflow-hidden ${className}`}
+      className={`relative w-full py-16 sm:py-20 lg:py-24 bg-dark-secondary ${className}`}
     >
-      {/* Watermark */}
-      <div
-        ref={watermarkRef}
-        className="absolute left-[4vw] top-[10vh] hidden lg:block"
-      >
-        <div className="vertical-text font-display text-[clamp(60px,8vw,140px)] font-black tracking-[0.15em] text-gold-dim leading-none">
-          PROJECTS
-        </div>
-      </div>
-
-      <div className="w-full px-6 lg:px-[8vw]">
+      <div className="w-full px-4 sm:px-6 lg:px-[8vw]">
         {/* Header */}
-        <div className="text-center mb-12">
-          <span className="text-gold text-sm uppercase tracking-[0.3em] mb-4 block">
+        <div className="text-center mb-8 sm:mb-10 lg:mb-12">
+          <span className="text-gold text-xs sm:text-sm uppercase tracking-[0.2em] sm:tracking-[0.3em] mb-3 sm:mb-4 block">
             My Work
           </span>
-          <h2 className="font-display text-[clamp(28px,3.6vw,56px)] font-bold text-text-primary leading-tight tracking-[-0.02em]">
+          <h2 className="font-display text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold text-text-primary leading-tight tracking-[-0.02em]">
             Featured Projects
           </h2>
         </div>
@@ -158,69 +129,69 @@ const Projects = ({ className = '' }: ProjectsProps) => {
         {/* GitHub Banner */}
         <div
           ref={githubRef}
-          className="max-w-4xl mx-auto mb-12"
+          className="max-w-xl mx-auto mb-8 sm:mb-10 lg:mb-12"
         >
           <a
             href="https://github.com/vedprakas3"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center justify-center gap-3 p-4 rounded-[10px] bg-white/5 border border-white/10 hover:border-gold/30 transition-all duration-300 group"
+            className="flex items-center justify-center gap-2 sm:gap-3 p-4 sm:p-5 rounded-lg sm:rounded-[10px] bg-white/5 border border-white/10 hover:border-gold/30 transition-all duration-300"
           >
-            <Github className="w-6 h-6 text-gold" />
-            <span className="text-text-primary">View all projects on</span>
-            <span className="text-gold font-medium group-hover:underline">GitHub</span>
-            <ExternalLink className="w-4 h-4 text-text-secondary group-hover:text-gold transition-colors" />
+            <Github className="w-5 h-5 sm:w-6 sm:h-6 text-gold" />
+            <span className="text-text-primary text-sm sm:text-base">View all projects on</span>
+            <span className="text-gold font-medium text-sm sm:text-base hover:underline">GitHub</span>
+            <ExternalLink className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-text-secondary" />
           </a>
         </div>
 
         {/* Projects Grid */}
         <div
           ref={projectsRef}
-          className="grid lg:grid-cols-3 gap-6 max-w-6xl mx-auto"
+          className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 lg:gap-6 max-w-5xl mx-auto"
         >
           {projects.map((project, index) => (
             <div
               key={index}
-              className="project-card p-6 rounded-[10px] bg-white/5 border border-white/10 hover:border-gold/30 transition-all duration-300 group hover:-translate-y-2"
+              className="project-card p-5 sm:p-6 rounded-lg sm:rounded-[10px] bg-white/5 border border-white/10 hover:border-gold/30 transition-all duration-300"
             >
-              <div className="flex items-start justify-between mb-6">
-                <div className="w-12 h-12 rounded-full bg-gold/10 flex items-center justify-center group-hover:bg-gold/20 transition-colors duration-300">
-                  <project.icon className="w-5 h-5 text-gold" />
+              <div className="flex items-start justify-between mb-4 sm:mb-5">
+                <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-gold/10 flex items-center justify-center">
+                  <project.icon className="w-4 h-4 sm:w-5 text-gold" />
                 </div>
                 <div className="flex gap-2">
                   <a
                     href={project.links.github}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-9 h-9 rounded-full border border-white/20 flex items-center justify-center text-text-secondary hover:border-gold hover:text-gold transition-all duration-300"
+                    className="w-8 h-8 sm:w-9 sm:h-9 rounded-full border border-white/20 flex items-center justify-center text-text-secondary hover:border-gold hover:text-gold transition-all duration-300 tap-target"
                     title="View Code"
                   >
-                    <Github className="w-4 h-4" />
+                    <Github className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                   </a>
                   <a
                     href={project.links.demo}
-                    className="w-9 h-9 rounded-full border border-white/20 flex items-center justify-center text-text-secondary hover:border-gold hover:text-gold transition-all duration-300"
+                    className="w-8 h-8 sm:w-9 sm:h-9 rounded-full border border-white/20 flex items-center justify-center text-text-secondary hover:border-gold hover:text-gold transition-all duration-300 tap-target"
                     title="Live Demo"
                   >
-                    <ExternalLink className="w-4 h-4" />
+                    <ExternalLink className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                   </a>
                 </div>
               </div>
 
-              <h3 className="text-text-primary font-semibold text-lg mb-2 group-hover:text-gold transition-colors">
+              <h3 className="text-text-primary font-semibold text-base sm:text-lg mb-2 hover:text-gold transition-colors">
                 {project.title}
               </h3>
 
-              <p className="text-text-secondary text-sm mb-4">
+              <p className="text-text-secondary text-xs sm:text-sm mb-3 sm:mb-4">
                 {project.description}
               </p>
 
               {/* Tech stack */}
-              <div className="flex flex-wrap gap-2 mb-4">
+              <div className="flex flex-wrap gap-1.5 sm:gap-2 mb-3 sm:mb-4">
                 {project.tech.map((tech, i) => (
                   <span
                     key={i}
-                    className="px-2 py-1 rounded-full bg-gold/10 text-gold text-xs"
+                    className="px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full bg-gold/10 text-gold text-[10px] sm:text-xs"
                   >
                     {tech}
                   </span>
@@ -228,9 +199,9 @@ const Projects = ({ className = '' }: ProjectsProps) => {
               </div>
 
               {/* Features */}
-              <ul className="space-y-1.5">
+              <ul className="space-y-1 sm:space-y-1.5">
                 {project.features.map((feature, i) => (
-                  <li key={i} className="flex items-start gap-2 text-xs text-text-secondary/80">
+                  <li key={i} className="flex items-start gap-1.5 sm:gap-2 text-[11px] sm:text-xs text-text-secondary/80">
                     <span className="w-1 h-1 rounded-full bg-gold mt-1.5 flex-shrink-0" />
                     <span>{feature}</span>
                   </li>

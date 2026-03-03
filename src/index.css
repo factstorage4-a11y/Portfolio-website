@@ -44,33 +44,59 @@
   
   html {
     scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
   }
   
   body {
     @apply bg-dark text-text-primary font-sans antialiased;
     overflow-x: hidden;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  /* Mobile-first typography */
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display font-bold tracking-tight;
   }
 }
 
 @layer components {
+  /* Vertical text - hidden on mobile */
   .vertical-text {
-    writing-mode: vertical-rl;
-    text-orientation: mixed;
-    transform: rotate(180deg);
+    display: none;
+  }
+  
+  @media (min-width: 1024px) {
+    .vertical-text {
+      display: block;
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+      transform: rotate(180deg);
+    }
   }
   
   .text-gold-dim {
     color: rgba(200, 164, 92, 0.10);
   }
   
+  /* Mobile-first button */
   .btn-gold {
-    @apply px-8 py-3 rounded-full border border-gold text-gold text-sm font-medium tracking-wider uppercase transition-all duration-300;
+    @apply px-6 py-3 rounded-full border border-gold text-gold text-sm font-medium tracking-wider uppercase transition-all duration-300;
+    @apply active:scale-95;
   }
   
   .btn-gold:hover {
     @apply bg-gold text-dark;
   }
   
+  @media (min-width: 768px) {
+    .btn-gold {
+      @apply px-8 py-3;
+    }
+  }
+  
+  /* Grain overlay */
   .grain-overlay {
     position: fixed;
     top: 0;
@@ -83,20 +109,49 @@
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
   }
   
+  /* Mobile-first section */
   .section-pinned {
-    @apply relative w-screen h-screen overflow-hidden;
+    @apply relative w-full min-h-screen overflow-hidden;
+    height: auto;
+  }
+  
+  @media (min-width: 1024px) {
+    .section-pinned {
+      height: 100vh;
+    }
   }
   
   .hairline {
     @apply h-px bg-white/10;
   }
   
+  /* Marquee - smaller on mobile */
   .marquee-track {
-    @apply flex gap-4 animate-marquee;
+    @apply flex gap-3 animate-marquee;
   }
   
   .marquee-track-reverse {
-    @apply flex gap-4 animate-marquee-reverse;
+    @apply flex gap-3 animate-marquee-reverse;
+  }
+  
+  @media (min-width: 768px) {
+    .marquee-track,
+    .marquee-track-reverse {
+      @apply gap-4;
+    }
+  }
+  
+  /* Card hover effects - disabled on touch devices */
+  @media (hover: hover) {
+    .hover-lift:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    }
+  }
+  
+  /* Touch-friendly tap targets */
+  .tap-target {
+    @apply min-h-[44px] min-w-[44px];
   }
 }
 
@@ -104,11 +159,23 @@
   .text-balance {
     text-wrap: balance;
   }
+  
+  /* Safe area for notched phones */
+  .safe-area-inset {
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+  }
 }
 
-/* Custom scrollbar */
+/* Custom scrollbar - thinner on mobile */
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 4px;
+}
+
+@media (min-width: 768px) {
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
 }
 
 ::-webkit-scrollbar-track {
@@ -144,11 +211,18 @@
 }
 
 .animate-marquee {
-  animation: marquee 30s linear infinite;
+  animation: marquee 25s linear infinite;
 }
 
 .animate-marquee-reverse {
-  animation: marquee-reverse 30s linear infinite;
+  animation: marquee-reverse 25s linear infinite;
+}
+
+@media (min-width: 768px) {
+  .animate-marquee,
+  .animate-marquee-reverse {
+    animation-duration: 30s;
+  }
 }
 
 /* Scroll indicator bounce */
@@ -168,16 +242,6 @@
 /* Glow effect for gold elements */
 .glow-gold {
   box-shadow: 0 0 20px rgba(200, 164, 92, 0.3);
-}
-
-/* Hover lift effect */
-.hover-lift {
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.hover-lift:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
 }
 
 /* Shimmer animation */
@@ -241,4 +305,20 @@
 *:focus-visible {
   outline: 2px solid #C8A45C;
   outline-offset: 2px;
+}
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  
+  .animate-marquee,
+  .animate-marquee-reverse {
+    animation: none;
+  }
 }

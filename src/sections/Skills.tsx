@@ -11,7 +11,6 @@ interface SkillsProps {
 
 const Skills = ({ className = '' }: SkillsProps) => {
   const sectionRef = useRef<HTMLElement>(null);
-  const watermarkRef = useRef<HTMLDivElement>(null);
   const skillsRef = useRef<HTMLDivElement>(null);
   const categoriesRef = useRef<HTMLDivElement>(null);
 
@@ -20,58 +19,40 @@ const Skills = ({ className = '' }: SkillsProps) => {
     if (!section) return;
 
     const ctx = gsap.context(() => {
-      // Watermark animation
-      gsap.fromTo(
-        watermarkRef.current,
-        { x: '10vw', opacity: 0 },
-        {
-          x: 0,
-          opacity: 0.08,
-          ease: 'power2.out',
-          scrollTrigger: {
-            trigger: section,
-            start: 'top 80%',
-            end: 'top 50%',
-            scrub: 0.3,
-          },
-        }
-      );
-
-      // Skills animation
-      const skillItems = skillsRef.current?.querySelectorAll('.skill-item');
-      if (skillItems) {
+      // Categories animation
+      const categories = categoriesRef.current?.querySelectorAll('.category-item');
+      if (categories) {
         gsap.fromTo(
-          skillItems,
-          { y: '6vh', opacity: 0, scale: 0.95 },
+          categories,
+          { y: 15, opacity: 0 },
           {
             y: 0,
             opacity: 1,
-            scale: 1,
             stagger: 0.08,
             ease: 'power2.out',
             scrollTrigger: {
-              trigger: skillsRef.current,
-              start: 'top 80%',
-              end: 'top 40%',
+              trigger: categoriesRef.current,
+              start: 'top 90%',
+              end: 'top 70%',
               scrub: 0.3,
             },
           }
         );
       }
 
-      // Categories animation
-      const categories = categoriesRef.current?.querySelectorAll('.category-item');
-      if (categories) {
+      // Skills animation
+      const skillItems = skillsRef.current?.querySelectorAll('.skill-item');
+      if (skillItems) {
         gsap.fromTo(
-          categories,
-          { x: '-4vw', opacity: 0 },
+          skillItems,
+          { y: 20, opacity: 0 },
           {
-            x: 0,
+            y: 0,
             opacity: 1,
-            stagger: 0.1,
+            stagger: 0.06,
             ease: 'power2.out',
             scrollTrigger: {
-              trigger: categoriesRef.current,
+              trigger: skillsRef.current,
               start: 'top 85%',
               end: 'top 55%',
               scrub: 0.3,
@@ -89,7 +70,7 @@ const Skills = ({ className = '' }: SkillsProps) => {
     { name: 'C++', category: 'Programming', icon: Code2, level: 80 },
     { name: 'HTML', category: 'Web', icon: Globe, level: 90 },
     { name: 'CSS', category: 'Web', icon: FileCode, level: 85 },
-    { name: 'DSA (Basic)', category: 'CS Fundamentals', icon: Cpu, level: 70 },
+    { name: 'DSA', category: 'CS Fundamentals', icon: Cpu, level: 70 },
     { name: 'OOPS', category: 'CS Fundamentals', icon: Layers, level: 75 },
     { name: 'RDBMS', category: 'Database', icon: Database, level: 70 },
     { name: 'Linux', category: 'System', icon: Terminal, level: 65 },
@@ -97,7 +78,7 @@ const Skills = ({ className = '' }: SkillsProps) => {
 
   const categories = [
     { name: 'Programming', count: 2, icon: Code2 },
-    { name: 'Web Development', count: 2, icon: Globe },
+    { name: 'Web Dev', count: 2, icon: Globe },
     { name: 'CS Fundamentals', count: 2, icon: Cpu },
     { name: 'Database & System', count: 2, icon: Server },
   ];
@@ -106,39 +87,29 @@ const Skills = ({ className = '' }: SkillsProps) => {
     <section
       ref={sectionRef}
       id="skills"
-      className={`relative min-h-screen bg-dark py-[12vh] overflow-hidden ${className}`}
+      className={`relative w-full py-16 sm:py-20 lg:py-24 ${className}`}
     >
-      {/* Watermark */}
-      <div
-        ref={watermarkRef}
-        className="absolute right-[4vw] top-[10vh] hidden lg:block"
-      >
-        <div className="vertical-text font-display text-[clamp(80px,10vw,180px)] font-black tracking-[0.15em] text-gold-dim leading-none">
-          SKILLS
-        </div>
-      </div>
-
-      <div className="w-full px-6 lg:px-[8vw]">
+      <div className="w-full px-4 sm:px-6 lg:px-[8vw]">
         {/* Header */}
-        <div className="text-center mb-16">
-          <span className="text-gold text-sm uppercase tracking-[0.3em] mb-4 block">
+        <div className="text-center mb-8 sm:mb-12 lg:mb-16">
+          <span className="text-gold text-xs sm:text-sm uppercase tracking-[0.2em] sm:tracking-[0.3em] mb-3 sm:mb-4 block">
             What I Know
           </span>
-          <h2 className="font-display text-[clamp(28px,3.6vw,56px)] font-bold text-text-primary leading-tight tracking-[-0.02em]">
+          <h2 className="font-display text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold text-text-primary leading-tight tracking-[-0.02em]">
             Technical Skills
           </h2>
         </div>
 
         {/* Categories */}
-        <div ref={categoriesRef} className="flex flex-wrap justify-center gap-4 mb-12">
+        <div ref={categoriesRef} className="flex flex-wrap justify-center gap-2 sm:gap-3 mb-8 sm:mb-10 lg:mb-12">
           {categories.map((cat, index) => (
             <div
               key={index}
-              className="category-item flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 hover:border-gold/30 transition-all duration-300"
+              className="category-item flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-white/5 border border-white/10 hover:border-gold/30 transition-all duration-300"
             >
-              <cat.icon className="w-4 h-4 text-gold" />
-              <span className="text-text-primary text-sm">{cat.name}</span>
-              <span className="text-gold text-xs">({cat.count})</span>
+              <cat.icon className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gold" />
+              <span className="text-text-primary text-xs sm:text-sm">{cat.name}</span>
+              <span className="text-gold text-[10px] sm:text-xs">({cat.count})</span>
             </div>
           ))}
         </div>
@@ -146,34 +117,34 @@ const Skills = ({ className = '' }: SkillsProps) => {
         {/* Skills Grid */}
         <div
           ref={skillsRef}
-          className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 max-w-5xl mx-auto"
+          className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 max-w-4xl mx-auto"
         >
           {skills.map((skill, index) => (
             <div
               key={index}
-              className="skill-item p-6 rounded-[10px] bg-white/5 border border-white/10 hover:border-gold/30 transition-all duration-300 group hover:-translate-y-1"
+              className="skill-item p-4 sm:p-5 lg:p-6 rounded-lg sm:rounded-[10px] bg-white/5 border border-white/10 hover:border-gold/30 transition-all duration-300"
             >
-              <div className="w-12 h-12 rounded-full bg-gold/10 flex items-center justify-center mb-4 group-hover:bg-gold/20 transition-colors duration-300">
-                <skill.icon className="w-5 h-5 text-gold" />
+              <div className="w-9 h-9 sm:w-10 sm:h-10 lg:w-12 lg:h-12 rounded-full bg-gold/10 flex items-center justify-center mb-3 sm:mb-4">
+                <skill.icon className="w-4 h-4 sm:w-5 text-gold" />
               </div>
               
-              <p className="text-text-secondary text-xs uppercase tracking-wider mb-1">
+              <p className="text-text-secondary text-[10px] sm:text-xs uppercase tracking-wider mb-1">
                 {skill.category}
               </p>
               
-              <h3 className="text-text-primary font-semibold mb-3">
+              <h3 className="text-text-primary font-semibold text-sm sm:text-base mb-2 sm:mb-3">
                 {skill.name}
               </h3>
               
               {/* Progress bar */}
-              <div className="h-1.5 bg-white/10 rounded-full overflow-hidden">
+              <div className="h-1 sm:h-1.5 bg-white/10 rounded-full overflow-hidden">
                 <div
-                  className="h-full bg-gradient-to-r from-gold to-gold/70 rounded-full transition-all duration-1000 ease-out group-hover:from-gold group-hover:to-gold"
+                  className="h-full bg-gradient-to-r from-gold to-gold/70 rounded-full transition-all duration-1000"
                   style={{ width: `${skill.level}%` }}
                 />
               </div>
               
-              <p className="text-gold text-xs mt-2 font-medium">
+              <p className="text-gold text-[10px] sm:text-xs mt-1.5 sm:mt-2 font-medium">
                 {skill.level}%
               </p>
             </div>
@@ -181,12 +152,12 @@ const Skills = ({ className = '' }: SkillsProps) => {
         </div>
 
         {/* Additional Info */}
-        <div className="mt-16 text-center max-w-2xl mx-auto">
-          <p className="text-text-secondary">
+        <div className="mt-10 sm:mt-14 lg:mt-16 text-center max-w-xl mx-auto px-4">
+          <p className="text-text-secondary text-sm sm:text-base">
             Continuously learning and expanding my skill set. Currently exploring 
             advanced networking concepts, machine learning, and web development frameworks.
           </p>
-          <div className="mt-6 flex flex-wrap justify-center gap-3">
+          <div className="mt-4 sm:mt-6 flex flex-wrap justify-center gap-2">
             <span className="px-3 py-1 rounded-full bg-gold/10 text-gold text-xs">Learning Python</span>
             <span className="px-3 py-1 rounded-full bg-gold/10 text-gold text-xs">Exploring AI/ML</span>
             <span className="px-3 py-1 rounded-full bg-gold/10 text-gold text-xs">Cybersecurity</span>
