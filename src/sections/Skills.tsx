@@ -1,195 +1,200 @@
-import { useRef } from 'react';
-import { motion, useInView } from 'framer-motion';
+import { useRef, useLayoutEffect } from 'react';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { Code2, Database, Terminal, Globe, Cpu, FileCode, Layers, Server } from 'lucide-react';
 
-const skills = [
-  {
-    category: 'Programming',
-    items: [
-      { name: 'C', level: 85 },
-      { name: 'C++', level: 80 },
-      { name: 'DSA', level: 75 },
-      { name: 'OOPs', level: 80 },
-    ],
-  },
-  {
-    category: 'Web Development',
-    items: [
-      { name: 'HTML', level: 90 },
-      { name: 'CSS', level: 85 },
-      { name: 'JavaScript', level: 75 },
-      { name: 'React', level: 70 },
-    ],
-  },
-  {
-    category: 'Database & Tools',
-    items: [
-      { name: 'SQL', level: 80 },
-      { name: 'RDBMS', level: 75 },
-      { name: 'Linux', level: 70 },
-      { name: 'Git', level: 75 },
-    ],
-  },
-  {
-    category: 'Networking',
-    items: [
-      { name: 'Cisco CCNA', level: 75 },
-      { name: 'VLAN', level: 80 },
-      { name: 'VPN', level: 70 },
-      { name: 'Security', level: 65 },
-    ],
-  },
-];
+gsap.registerPlugin(ScrollTrigger);
 
-const features = [
-  {
-    title: 'Problem Solving',
-    description: 'Strong analytical skills with the ability to break down complex problems into manageable solutions. Experienced in algorithm design and optimization.',
-  },
-  {
-    title: '24/7 Learning',
-    description: 'Committed to continuous improvement and staying updated with the latest technologies. Always eager to learn new skills and adapt to changing requirements.',
-  },
-  {
-    title: 'Clean Code',
-    description: 'Writing maintainable, well-documented code following best practices. Focus on readability, efficiency, and scalability in every project.',
-  },
-  {
-    title: 'Efficient',
-    description: 'Optimizing performance and resource usage. From code efficiency to system design, ensuring solutions are fast, reliable, and cost-effective.',
-  },
-];
+interface SkillsProps {
+  className?: string;
+}
 
-export default function Skills() {
+const Skills = ({ className = '' }: SkillsProps) => {
   const sectionRef = useRef<HTMLElement>(null);
-  const isInView = useInView(sectionRef, { once: true, margin: '-100px' });
+  const watermarkRef = useRef<HTMLDivElement>(null);
+  const skillsRef = useRef<HTMLDivElement>(null);
+  const categoriesRef = useRef<HTMLDivElement>(null);
+
+  useLayoutEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+
+    const ctx = gsap.context(() => {
+      // Watermark animation
+      gsap.fromTo(
+        watermarkRef.current,
+        { x: '10vw', opacity: 0 },
+        {
+          x: 0,
+          opacity: 0.08,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: section,
+            start: 'top 80%',
+            end: 'top 50%',
+            scrub: 0.3,
+          },
+        }
+      );
+
+      // Skills animation
+      const skillItems = skillsRef.current?.querySelectorAll('.skill-item');
+      if (skillItems) {
+        gsap.fromTo(
+          skillItems,
+          { y: '6vh', opacity: 0, scale: 0.95 },
+          {
+            y: 0,
+            opacity: 1,
+            scale: 1,
+            stagger: 0.08,
+            ease: 'power2.out',
+            scrollTrigger: {
+              trigger: skillsRef.current,
+              start: 'top 80%',
+              end: 'top 40%',
+              scrub: 0.3,
+            },
+          }
+        );
+      }
+
+      // Categories animation
+      const categories = categoriesRef.current?.querySelectorAll('.category-item');
+      if (categories) {
+        gsap.fromTo(
+          categories,
+          { x: '-4vw', opacity: 0 },
+          {
+            x: 0,
+            opacity: 1,
+            stagger: 0.1,
+            ease: 'power2.out',
+            scrollTrigger: {
+              trigger: categoriesRef.current,
+              start: 'top 85%',
+              end: 'top 55%',
+              scrub: 0.3,
+            },
+          }
+        );
+      }
+    }, section);
+
+    return () => ctx.revert();
+  }, []);
+
+  const skills = [
+    { name: 'C', category: 'Programming', icon: Code2, level: 85 },
+    { name: 'C++', category: 'Programming', icon: Code2, level: 80 },
+    { name: 'HTML', category: 'Web', icon: Globe, level: 90 },
+    { name: 'CSS', category: 'Web', icon: FileCode, level: 85 },
+    { name: 'DSA (Basic)', category: 'CS Fundamentals', icon: Cpu, level: 70 },
+    { name: 'OOPS', category: 'CS Fundamentals', icon: Layers, level: 75 },
+    { name: 'RDBMS', category: 'Database', icon: Database, level: 70 },
+    { name: 'Linux', category: 'System', icon: Terminal, level: 65 },
+  ];
+
+  const categories = [
+    { name: 'Programming', count: 2, icon: Code2 },
+    { name: 'Web Development', count: 2, icon: Globe },
+    { name: 'CS Fundamentals', count: 2, icon: Cpu },
+    { name: 'Database & System', count: 2, icon: Server },
+  ];
 
   return (
     <section
-      id="skills"
       ref={sectionRef}
-      className="section relative min-h-screen py-32"
+      id="skills"
+      className={`relative min-h-screen bg-dark py-[12vh] overflow-hidden ${className}`}
     >
-      {/* Background */}
-      <div className="absolute inset-0 bg-[#0d0d0d]" />
+      {/* Watermark */}
+      <div
+        ref={watermarkRef}
+        className="absolute right-[4vw] top-[10vh] hidden lg:block"
+      >
+        <div className="vertical-text font-display text-[clamp(80px,10vw,180px)] font-black tracking-[0.15em] text-gold-dim leading-none">
+          SKILLS
+        </div>
+      </div>
 
-      <div className="relative z-10 w-full px-6 lg:px-12">
-        {/* Section Header */}
-        <div className="mb-24">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.8 }}
-            className="flex items-center gap-4 mb-8"
-          >
-            <span className="text-xs uppercase tracking-[0.3em] text-white/50">
-              Expertise
-            </span>
-            <div className="flex-1 h-px bg-white/10" />
-          </motion.div>
+      <div className="w-full px-6 lg:px-[8vw]">
+        {/* Header */}
+        <div className="text-center mb-16">
+          <span className="text-gold text-sm uppercase tracking-[0.3em] mb-4 block">
+            What I Know
+          </span>
+          <h2 className="font-display text-[clamp(28px,3.6vw,56px)] font-bold text-text-primary leading-tight tracking-[-0.02em]">
+            Technical Skills
+          </h2>
+        </div>
 
-          <motion.h2
-            initial={{ opacity: 0, y: 50 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 1, delay: 0.2 }}
-            className="text-5xl sm:text-6xl lg:text-7xl font-light"
-          >
-            <span className="block">Skills that</span>
-            <span className="block text-white/60">evolve with you</span>
-          </motion.h2>
+        {/* Categories */}
+        <div ref={categoriesRef} className="flex flex-wrap justify-center gap-4 mb-12">
+          {categories.map((cat, index) => (
+            <div
+              key={index}
+              className="category-item flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 hover:border-gold/30 transition-all duration-300"
+            >
+              <cat.icon className="w-4 h-4 text-gold" />
+              <span className="text-text-primary text-sm">{cat.name}</span>
+              <span className="text-gold text-xs">({cat.count})</span>
+            </div>
+          ))}
         </div>
 
         {/* Skills Grid */}
-        <div className="grid md:grid-cols-2 gap-px bg-white/10 mb-32">
-          {skills.map((skillGroup, groupIndex) => (
-            <motion.div
-              key={skillGroup.category}
-              initial={{ opacity: 0, y: 30 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.6, delay: 0.3 + groupIndex * 0.1 }}
-              className="bg-[#0d0d0d] p-8 lg:p-12"
+        <div
+          ref={skillsRef}
+          className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 max-w-5xl mx-auto"
+        >
+          {skills.map((skill, index) => (
+            <div
+              key={index}
+              className="skill-item p-6 rounded-[10px] bg-white/5 border border-white/10 hover:border-gold/30 transition-all duration-300 group hover:-translate-y-1"
             >
-              <h3 className="text-xs uppercase tracking-[0.3em] text-white/40 mb-8">
-                {skillGroup.category}
+              <div className="w-12 h-12 rounded-full bg-gold/10 flex items-center justify-center mb-4 group-hover:bg-gold/20 transition-colors duration-300">
+                <skill.icon className="w-5 h-5 text-gold" />
+              </div>
+              
+              <p className="text-text-secondary text-xs uppercase tracking-wider mb-1">
+                {skill.category}
+              </p>
+              
+              <h3 className="text-text-primary font-semibold mb-3">
+                {skill.name}
               </h3>
-              <div className="space-y-6">
-                {skillGroup.items.map((skill, skillIndex) => (
-                  <div key={skill.name}>
-                    <div className="flex justify-between items-center mb-2">
-                      <span className="text-white font-medium">{skill.name}</span>
-                      <span className="text-white/40 text-sm">{skill.level}%</span>
-                    </div>
-                    <div className="h-1 bg-white/10 overflow-hidden">
-                      <motion.div
-                        initial={{ width: 0 }}
-                        animate={isInView ? { width: `${skill.level}%` } : {}}
-                        transition={{ 
-                          duration: 1, 
-                          delay: 0.5 + groupIndex * 0.1 + skillIndex * 0.1,
-                          ease: [0.4, 0, 0.2, 1]
-                        }}
-                        className="h-full bg-gradient-to-r from-[#c9a962] to-[#e8d5a3]"
-                      />
-                    </div>
-                  </div>
-                ))}
+              
+              {/* Progress bar */}
+              <div className="h-1.5 bg-white/10 rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-gradient-to-r from-gold to-gold/70 rounded-full transition-all duration-1000 ease-out group-hover:from-gold group-hover:to-gold"
+                  style={{ width: `${skill.level}%` }}
+                />
               </div>
-            </motion.div>
+              
+              <p className="text-gold text-xs mt-2 font-medium">
+                {skill.level}%
+              </p>
+            </div>
           ))}
         </div>
 
-        {/* Features Section */}
-        <div className="mb-16">
-          <motion.h3
-            initial={{ opacity: 0, y: 30 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.8, delay: 0.6 }}
-            className="text-xs uppercase tracking-[0.3em] text-white/50 mb-12"
-          >
-            A Better Way to Code
-          </motion.h3>
-        </div>
-
-        {/* Feature Cards */}
-        <div className="grid md:grid-cols-2 gap-px bg-white/10">
-          {features.map((feature, index) => (
-            <motion.div
-              key={feature.title}
-              initial={{ opacity: 0, y: 30 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.6, delay: 0.7 + index * 0.1 }}
-              className="feature-card bg-[#0d0d0d]"
-            >
-              <h4 className="feature-title">{feature.title}</h4>
-              <p className="feature-description">{feature.description}</p>
-            </motion.div>
-          ))}
-        </div>
-
-        {/* Stats */}
-        <div className="mt-32 grid grid-cols-2 lg:grid-cols-4 gap-8">
-          {[
-            { label: 'Technologies', value: '15+' },
-            { label: 'Projects', value: '10+' },
-            { label: 'Certifications', value: '5+' },
-            { label: 'Learning Hours', value: '2000+' },
-          ].map((stat, index) => (
-            <motion.div
-              key={stat.label}
-              initial={{ opacity: 0, y: 30 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.6, delay: 1 + index * 0.1 }}
-              className="text-center"
-            >
-              <div className="text-4xl lg:text-5xl font-light text-white mb-2">
-                {stat.value}
-              </div>
-              <div className="text-xs uppercase tracking-[0.2em] text-white/50">
-                {stat.label}
-              </div>
-            </motion.div>
-          ))}
+        {/* Additional Info */}
+        <div className="mt-16 text-center max-w-2xl mx-auto">
+          <p className="text-text-secondary">
+            Continuously learning and expanding my skill set. Currently exploring 
+            advanced networking concepts, machine learning, and web development frameworks.
+          </p>
+          <div className="mt-6 flex flex-wrap justify-center gap-3">
+            <span className="px-3 py-1 rounded-full bg-gold/10 text-gold text-xs">Learning Python</span>
+            <span className="px-3 py-1 rounded-full bg-gold/10 text-gold text-xs">Exploring AI/ML</span>
+            <span className="px-3 py-1 rounded-full bg-gold/10 text-gold text-xs">Cybersecurity</span>
+          </div>
         </div>
       </div>
     </section>
   );
-}
+};
+
+export default Skills;

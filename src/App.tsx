@@ -1,65 +1,88 @@
 import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import Lenis from 'lenis';
-import Navigation from './components/Navigation';
+import './App.css';
+
+// Sections
+import Navigation from './sections/Navigation';
 import Hero from './sections/Hero';
 import About from './sections/About';
-import Projects from './sections/Projects';
+import Experience from './sections/Experience';
 import Skills from './sections/Skills';
+import Projects from './sections/Projects';
 import Contact from './sections/Contact';
-import Footer from './sections/Footer';
-import './index.css';
 
 gsap.registerPlugin(ScrollTrigger);
 
 function App() {
-  const lenisRef = useRef<Lenis | null>(null);
+  const mainRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Initialize Lenis smooth scroll
-    const lenis = new Lenis({
-      duration: 1.2,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      orientation: 'vertical',
-      gestureOrientation: 'vertical',
-      smoothWheel: true,
-    });
+    // Global snap for pinned sections
+    const setupGlobalSnap = () => {
+      const pinned = ScrollTrigger.getAll()
+        .filter(st => st.vars.pin)
+        .sort((a, b) => a.start - b.start);
+      
+      const maxScroll = ScrollTrigger.maxScroll(window);
+      if (!maxScroll || pinned.length === 0) return;
 
-    lenisRef.current = lenis;
+      const pinnedRanges = pinned.map(st => ({
+        start: st.start / maxScroll,
+        end: (st.end ?? st.start) / maxScroll,
+        center: (st.start + ((st.end ?? st.start) - st.start) * 0.5) / maxScroll,
+      }));
 
-    function raf(time: number) {
-      lenis.raf(time);
-      requestAnimationFrame(raf);
-    }
+      ScrollTrigger.create({
+        snap: {
+          snapTo: (value: number) => {
+            const inPinned = pinnedRanges.some(
+              r => value >= r.start - 0.02 && value <= r.end + 0.02
+            );
+            if (!inPinned) return value;
 
-    requestAnimationFrame(raf);
+            const target = pinnedRanges.reduce(
+              (closest, r) =>
+                Math.abs(r.center - value) < Math.abs(closest - value)
+                  ? r.center
+                  : closest,
+              pinnedRanges[0]?.center ?? 0
+            );
+            return target;
+          },
+          duration: { min: 0.15, max: 0.35 },
+          delay: 0,
+          ease: 'power2.out',
+        },
+      });
+    };
 
-    // Connect Lenis to GSAP ScrollTrigger
-    lenis.on('scroll', ScrollTrigger.update);
-
-    gsap.ticker.add((time) => {
-      lenis.raf(time * 1000);
-    });
-
-    gsap.ticker.lagSmoothing(0);
+    // Delay to allow all ScrollTriggers to initialize
+    const timer = setTimeout(setupGlobalSnap, 500);
 
     return () => {
-      lenis.destroy();
+      clearTimeout(timer);
+      ScrollTrigger.getAll().forEach(st => st.kill());
     };
   }, []);
 
   return (
-    <div className="app">
+    <div ref={mainRef} className="relative bg-dark">
+      {/* Grain overlay */}
+      <div className="grain-overlay" />
+      
+      {/* Navigation */}
       <Navigation />
-      <main>
-        <Hero />
-        <About />
-        <Projects />
-        <Skills />
-        <Contact />
+      
+      {/* Main content */}
+      <main className="relative">
+        <Hero className="z-10" />
+        <About className="z-20" />
+        <Experience className="z-30" />
+        <Skills className="z-40" />
+        <Projects className="z-50" />
+        <Contact className="z-60" />
       </main>
-      <Footer />
     </div>
   );
 }

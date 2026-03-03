@@ -48,6 +48,23 @@ module.exports = {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        // Custom colors for Jesko Jets theme
+        dark: {
+          DEFAULT: "#0B0B0D",
+          secondary: "#141419",
+        },
+        gold: {
+          DEFAULT: "#C8A45C",
+          dim: "rgba(200,164,92,0.10)",
+        },
+        text: {
+          primary: "#F5F5F7",
+          secondary: "#B8B8BE",
+        },
+      },
+      fontFamily: {
+        sans: ['Inter', 'system-ui', 'sans-serif'],
+        display: ['Montserrat', 'system-ui', 'sans-serif'],
       },
       borderRadius: {
         xl: "calc(var(--radius) + 4px)",
